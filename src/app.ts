@@ -1,30 +1,44 @@
 import express from 'express'
 import * as path from 'path'
 import morgan from 'morgan'
-import dotenv from 'dotenv'
-import product = require('./models/appModel')
+import * as config from './config'
+import product from './models/appModel'
 import mongoose from 'mongoose'
+import router from './routes/appRoutes'
+import session from 'express-session'
+import flash from 'connect-flash'
+import expressLayout from 'express-ejs-layouts'
 
-dotenv.config()
 const app = express();
 
 //Setting up the app
-app.set('views', path.join(__dirname, 'views'))
+// app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
+app.set('layout', './layouts/main')
 
 
 //Setting up the middlewares
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(morgan('tiny'))
+app.use(expressLayout)
+app.use(router)
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
+}))
 
-const port = Number(process.env.PORT || 3000)
-const dbURI = process.env.mongoURI
+app.use(flash)
+
+const port = config.port
+const dbURI = config.dbURI
 
 
-if (dbURI == undefined) {
-    console.log('Error while connection to the Datebase')
+if (dbURI === undefined) {
+    console.log('Error while connecting to the Datebase')
 } else {
-    async () => {
+    (async () => {
         try {
             await mongoose.connect(dbURI)
             app.listen(port, () => {
@@ -35,5 +49,5 @@ if (dbURI == undefined) {
             console.log(err)
         }
 
-    }
+    })();
 }
