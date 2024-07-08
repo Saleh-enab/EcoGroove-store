@@ -1,0 +1,19 @@
+.navbar-toggle .icon-bar {
+    display: block;
+    width: 22px;
+    /* Adjust width as needed */
+    height: 2px;
+    /* Height of each dash */
+    margin: 4px 0;
+    /* Spacing between dashes */
+    background-color: #010101;
+    /* Color of the dashes */
+}
+
+.navbar-toggle .icon-bar:first-child {
+    margin-top: 2px;
+}
+
+.navbar-toggle .icon-bar:last-child {
+    margin-bottom: 4px;
+}

@@ -1,4 +1,4 @@
-import * as controller from '../controllers/appControllers'
+import * as controller from '../controllers/userControllers'
 import express from 'express'
 const router = express.Router();
 

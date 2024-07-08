@@ -4,24 +4,23 @@ import morgan from 'morgan'
 import * as config from './config'
 import product from './models/appModel'
 import mongoose from 'mongoose'
-import router from './routes/appRoutes'
+import userRouter from './routes/userRoutes'
+import adminRouter from './routes/adminRoutes'
 import session from 'express-session'
 import flash from 'connect-flash'
-import expressLayout from 'express-ejs-layouts'
 
 const app = express();
 
 //Setting up the app
-// app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.set('layout', './layouts/main')
 
 
 //Setting up the middlewares
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, '../public')))
 app.use(morgan('tiny'))
-app.use(expressLayout)
-app.use(router)
+app.use('/users', userRouter)
+app.use('/admin', adminRouter)
 app.use(session({
     secret: 'keyboard cat',
     resave: false,

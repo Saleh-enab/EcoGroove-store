@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 const getHome = (req: Request, res: Response) => {
-    res.render('index', { title: "Home" })
+    res.send("Hello From Users page")
 }
 
 export { getHome }
