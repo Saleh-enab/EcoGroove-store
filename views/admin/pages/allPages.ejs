@@ -4,89 +4,101 @@
     <a href="/admin/pages/add-page" class="btn btn-primary">Add a new page</a>
     <br><br>
 
-    <% if (messages && messages.length !=0) { %>
-        <% messages.forEach((msg)=> { %>
+    <% if (messages.success && messages.success.length !=0) { %>
+        <% messages.success.forEach((msg)=> { %>
             <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: top 20px;">
                 <%= msg %>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
                     </button>
             </div>
             <% }) %>
-                <% } %>
+                <% } else if (messages.error && messages.error.length !=0) { %>
+                    <% messages.error.forEach((msg)=> { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="margin: top 20px;">
+                            <%= msg %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                        </div>
+                        <% }) %>
+                            <%}%>
 
-                    <table class="table table-striped sorting">
-                        <thead>
-                            <tr class="home">
-                                <th>Title</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% allPages.forEach(function(page){ %>
-                                <tr id="id_<%= page._id %>" class="<%= page.slug %>">
-                                    <td>
-                                        <%= page.title %>
-                                    </td>
-                                    <td><a href="/admin/pages/edit-page/<%= page._id %>">Edit</a></td>
-                                    <td>
-                                    <td>
-                                        <% if (page.slug !=="home" ) { %>
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                data-bs-target="#deleteModal_<%= page._id %>">Delete</button>
-                                            <% } %>
-                                    </td>
-                                    </td>
-                                </tr>
-                                <% }); %>
-                        </tbody>
-                        <% allPages.forEach(function(page){ %>
-                            <div class="modal fade" id="deleteModal_<%= page._id %>" tabindex="-1" role="dialog"
-                                aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you want to delete the page <b class="fw-bold">
+                                <table class="table table-striped sorting">
+                                    <thead>
+                                        <tr class="home">
+                                            <th>Title</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% allPages.forEach(function(page){ %>
+                                            <tr id="id_<%= page._id %>" class="<%= page.slug %>">
+                                                <td>
                                                     <%= page.title %>
-                                                </b>?</p>
+                                                </td>
+                                                <td><a href="/admin/pages/edit-page/<%= page._id %>">Edit</a></td>
+                                                <td>
+                                                <td>
+                                                    <% if (page.slug !=="home" ) { %>
+                                                        <button type="button" class="btn btn-danger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteModal_<%= page._id %>">Delete</button>
+                                                        <% } %>
+                                                </td>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                    </tbody>
+                                    <% allPages.forEach(function(page){ %>
+                                        <div class="modal fade" id="deleteModal_<%= page._id %>" tabindex="-1"
+                                            role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete the page <b class="fw-bold">
+                                                                <%= page.title %>
+                                                            </b>?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <form
+                                                            action="/admin/pages/delete-page/<%= page._id %>?_method=DELETE"
+                                                            method="POST">
+                                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <form action="/admin/pages/delete-page/<%= page._id %>?_method=DELETE"
-                                                method="POST">
-                                                <button type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <% }); %>
-                    </table>
+                                        <% }); %>
+                                </table>
 
 
-                    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-                    <script>
+                                <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+                                <script>
 
-                        $('tbody').sortable({
+                                    $('tbody').sortable({
 
-                            items: "tr:not('.home')",
-                            placeholder: "ui-state-hightlight",
-                            update: function () {
-                                var ids = $('tbody').sortable("serialize");
-                                var url = "/admin/pages/reorder-pages";
+                                        items: "tr:not('.home')",
+                                        placeholder: "ui-state-hightlight",
+                                        update: function () {
+                                            var ids = $('tbody').sortable("serialize");
+                                            var url = "/admin/pages/reorder-pages";
 
-                                $.post(url, ids);
-                            }
+                                            $.post(url, ids);
+                                        }
 
-                        });
+                                    });
 
-                    </script>
+                                </script>
 
 
-                    <%- include('../../partials/adminFooter') %>
+                                <%- include('../../partials/adminFooter') %>

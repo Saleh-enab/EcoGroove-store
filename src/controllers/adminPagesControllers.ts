@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import pageModel from "../models/pageModel";
+import { CustomError } from "../errorHandler";
 
 const getHome = (req: Request, res: Response) => {
     res.send("Hello From Admin page")
@@ -8,15 +9,13 @@ const getHome = (req: Request, res: Response) => {
 
 
 //Showing all pages in a the DataBase
-const showAllPages = async (req: Request, res: Response) => {
+const showAllPages = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const allPages = await pageModel.find({})
-        const messages = req.flash('success')
-        res.render('./admin/pages/allPages', { allPages, messages })
+        res.render('./admin/pages/allPages', { allPages })
     }
     catch (err) {
-        console.log(err)
-        res.status(500).send("Internal server error")
+        next(err);
     }
 }
 
@@ -29,41 +28,41 @@ const addPage = (req: Request, res: Response) => {
 
 
 //Adding new page to the Database
-const postNewPage = async (req: Request, res: Response) => {
+const postNewPage = async (req: Request, res: Response, next: NextFunction) => {
 
     const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        const errorsArr: string[] = errors.array().map(err => err.msg);
-        req.flash('error', errorsArr)
-        res.render('./admin/pages/addPage', { errors: errorsArr })
-    } else {
-        const title = req.body.title
-        let slug = req.body.slug.replace(/\s+/, '_').toLowerCase();
-        if (slug === "") {
-            slug = title.replace(/\s+/, '_').toLowerCase();
-        }
-        const content = req.body.content
+    try {
+        if (!errors.isEmpty()) {
+            const errorsArr: string[] = errors.array().map(err => err.msg);
+            const err = new CustomError(errorsArr, 400)
+            return next(err)
+        } else {
+            const title = req.body.title
+            let slug = req.body.slug.replace(/\s+/, '_').toLowerCase();
+            if (slug === "") {
+                slug = title.replace(/\s+/, '_').toLowerCase();
+            }
+            const content = req.body.content
 
-        const page = new pageModel({
-            title: title,
-            slug: slug,
-            content: content
-        })
+            const page = new pageModel({
+                title: title,
+                slug: slug,
+                content: content
+            })
 
-        try {
             await page.save()
             req.flash('success', 'page added successfully')
             res.redirect('/admin/pages/allPages')
-        } catch (err) {
-            console.log(err)
-            res.status(500).send("Internal server error")
         }
+    } catch (err) {
+        next(err);
     }
+
 }
 
 
 //Open edit page
-const editPage = async (req: Request, res: Response) => {
+const editPage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const page = await pageModel.findById(req.params.id)
         const id = req.params.id
@@ -73,42 +72,48 @@ const editPage = async (req: Request, res: Response) => {
         res.render('./admin/pages/editPage', { id, title, slug, content })
     }
     catch (err) {
-        res.status(500).send("Internal server error")
+        next(err);
     }
 }
 
 //Update the date of the page in database
-const postEditPage = async (req: Request, res: Response) => {
+const postEditPage = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            const errorsArr: string[] = errors.array().map(err => err.msg);
+            const err = new CustomError(errorsArr, 400)
+            return next(err)
+        } else {
+            let newData = {
+                title: req.body.title,
+                slug: req.body.slug.replace(/\s+/, '_').toLowerCase(),
+                content: req.body.content
+            }
 
-        let newData = {
-            title: req.body.title,
-            slug: req.body.slug.replace(/\s+/, '_').toLowerCase(),
-            content: req.body.content
+            if (newData.slug === "") {
+                newData.slug = newData.title.replace(/\s+/, '_').toLowerCase();
+            }
+            await pageModel.findByIdAndUpdate(req.params.id, newData)
+            req.flash('success', 'Page has been updated successfully')
+            res.redirect('/admin/pages/allPages')
         }
 
-        if (newData.slug === "") {
-            newData.slug = newData.title.replace(/\s+/, '_').toLowerCase();
-        }
 
-
-        await pageModel.findByIdAndUpdate(req.params.id, newData)
-        req.flash('success', 'Page has been updated successfully')
-        res.redirect('/admin/pages/allPages')
     }
     catch (err) {
-        res.status(500).send("Internal server error")
+        next(err)
     }
 }
 
-const deletePage = async (req: Request, res: Response) => {
+const deletePage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await pageModel.findByIdAndDelete(req.params.id)
         req.flash('success', 'Page has been deleted successfully')
         res.redirect('/admin/pages/allPages')
     }
     catch (err) {
-        res.status(500).send("Internal server error")
+        next(err);
     }
 }
 

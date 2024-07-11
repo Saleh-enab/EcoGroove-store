@@ -4,29 +4,39 @@
     <a href="/admin/categories/allCategories" class="btn btn-primary">Back to all categories</a>
     <br><br>
 
-    <% if (errors && errors.length !=0) { %>
-        <% errors.forEach((err)=> { %>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin: top 20px;">
-                <%= err %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <% if (messages.success && messages.success.length !=0) { %>
+        <% messages.success.forEach((msg)=> { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: top 20px;">
+                <%= msg %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
             </div>
             <% }) %>
-                <% } %>
-
-                    <form method="post" action="/admin/categories/add-category">
-
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <br>
-                            <input type="text" class="form-control" name="title" placeholder="Title">
+                <% } else if (messages.error && messages.error.length !=0) { %>
+                    <% messages.error.forEach((msg)=> { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="margin: top 20px;">
+                            <%= msg %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
                         </div>
-                        <br>
-                        <div class="form-group">
-                            <label for="">Slug</label>
-                            <input type="text" class="form-control" name="slug" placeholder="Slug">
-                        </div>
-                        <br>
-                        <button class="btn btn-primary">Submit</button>
-                    </form>
+                        <% }) %>
+                            <%}%>
 
-                    <%- include('../../partials/adminFooter') %>
+                                <form method="post" action="/admin/categories/add-category">
+
+                                    <div class="form-group">
+                                        <label for="title">Title</label>
+                                        <br>
+                                        <input type="text" class="form-control" name="title" placeholder="Title">
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label for="">Slug</label>
+                                        <input type="text" class="form-control" name="slug" placeholder="Slug">
+                                    </div>
+                                    <br>
+                                    <button class="btn btn-primary">Submit</button>
+                                </form>
+
+                                <%- include('../../partials/adminFooter') %>

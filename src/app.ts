@@ -10,6 +10,7 @@ import productsRouter from './routes/adminProductRouter'
 import session from 'express-session'
 import flash from 'connect-flash'
 import methodOverride from 'method-override'
+import { errorHandler } from './errorHandler'
 
 const app = express();
 
@@ -28,16 +29,30 @@ app.use(session({
 
 app.use(flash());
 
+// Middleware to pass flash messages to all views
+app.use((req, res, next) => {
+    res.locals.messages = {
+        success: req.flash('success'),
+        error: req.flash('error')
+    }
+
+    next();
+});
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(morgan('tiny'));
 app.use(methodOverride('_method'))
+
 
 // Routes
 app.use('/users', userRouter);
 app.use('/admin/pages', pagesRouter);
 app.use('/admin/categories', categoryRouter);
 app.use('/admin/products', productsRouter);
+
+// Error Middleware
+app.use(errorHandler)
 
 
 

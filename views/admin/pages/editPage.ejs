@@ -4,26 +4,48 @@
     <a href="/admin/pages/allPages" class="btn btn-primary">Back to all pages</a>
     <br><br>
 
-    <form method="post" action="/admin/pages/edit-page/<%= id %>">
 
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" name="title" value="<%= title %>" placeholder="Title">
-        </div>
+    <% if (messages.success && messages.success.length !=0) { %>
+        <% messages.success.forEach((msg)=> { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: top 20px;">
+                <%= msg %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
+            </div>
+            <% }) %>
+                <% } else if (messages.error && messages.error.length !=0) { %>
+                    <% messages.error.forEach((msg)=> { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                            style="margin: top 20px;">
+                            <%= msg %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                </button>
+                        </div>
+                        <% }) %>
+                            <%}%>
 
-        <div class="form-group">
-            <label for="slug">Slug</label>
-            <input type="text" class="form-control" name="slug" value="<%= slug %>" placeholder="Slug">
-        </div>
+                                <form method="post" action="/admin/pages/edit-page/<%= id %>">
 
-        <div class="form-group">
-            <label for="content">Content</label>
-            <textarea name="content" class="form-control" id="ta" cols="30" rows="10"
-                placeholder="Content"><%= content %></textarea>
-        </div>
-        <br>
+                                    <div class="form-group">
+                                        <label for="title">Title</label>
+                                        <input type="text" class="form-control" name="title" value="<%= title %>"
+                                            placeholder="Title">
+                                    </div>
 
-        <button class="btn btn-primary">Submit</button>
-    </form>
+                                    <div class="form-group">
+                                        <label for="slug">Slug</label>
+                                        <input type="text" class="form-control" name="slug" value="<%= slug %>"
+                                            placeholder="Slug">
+                                    </div>
 
-    <%- include('../../partials/adminfooter') %>
+                                    <div class="form-group">
+                                        <label for="content">Content</label>
+                                        <textarea name="content" class="form-control" id="ta" cols="30" rows="10"
+                                            placeholder="Content"><%= content %></textarea>
+                                    </div>
+                                    <br>
+
+                                    <button class="btn btn-primary">Submit</button>
+                                </form>
+
+                                <%- include('../../partials/adminfooter') %>

@@ -1,77 +1,75 @@
 import productModel from "../models/productModel"
 import categoryModel from "../models/categoryModel"
-import { Request, Response } from "express"
+import { Request, Response, NextFunction } from "express"
 import { validationResult } from "express-validator"
 import fs from 'fs'
 import path from "path"
 import { ProductArgs } from "../models/productModel"
+import { CustomError } from "../errorHandler"
 
 
 //Showing all products in a the DataBase
-const showAllProducts = async (req: Request, res: Response) => {
+const showAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const allProducts = await productModel.find({})
-        const messages = req.flash('success')
-        res.render('./admin/products/allProducts', { products: allProducts, messages })
+        res.render('./admin/products/allProducts', { products: allProducts })
     }
     catch (err) {
-        console.log(err)
-        res.status(500).send("Internal server error")
+        next(err);
     }
 }
 
 
 //Open add product from
-const addProduct = async (req: Request, res: Response) => {
+const addProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const allCategotioes = await categoryModel.find({})
         const errors = req.flash('error')
         res.render('./admin/products/addProduct', { categories: allCategotioes, errors })
     }
     catch (err) {
-        res.status(500).send("Internal server error")
+        next(err);
     }
 
 }
 
 
 //Add new product to the database
-const postNewProduct = async (req: Request, res: Response) => {
-
-    const allCategotioes = await categoryModel.find({})
+const postNewProduct = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        const errorsArr: string[] = errors.array().map(err => err.msg);
-        req.flash('error', errorsArr)
-        res.render('./admin/products/addProduct', { errors: errorsArr, categories: allCategotioes })
-    } else {
-        const title: string = req.body.title
-        const description: string = req.body.desc
-        const category: string = req.body.category
-        const price = Number(req.body.price)
-        const image = req.file?.filename
+    try {
+        if (!errors.isEmpty()) {
+            const errorsArr: string[] = errors.array().map(err => err.msg);
+            throw new CustomError(errorsArr, 400)
+        } else {
+            const title: string = req.body.title
+            const description: string = req.body.desc
+            const category: string = req.body.category
+            const price = Number(req.body.price)
+            const image = req.file?.filename
 
-        const product = new productModel({
-            title,
-            desc: description,
-            category,
-            price,
-            image
-        })
-        try {
+            const product = new productModel({
+                title,
+                desc: description,
+                category,
+                price,
+                image
+            })
             await product.save()
             req.flash('success', "Product has been added successfully")
             res.redirect('/admin/products/allProducts')
         }
-        catch (err) {
-            res.status(500).send("Internal server error")
-        }
+
     }
+    catch (err) {
+        next(err);
+    }
+
 }
 
 
 //Open edit product page
-const editProduct = async (req: Request, res: Response) => {
+const editProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const errors = req.flash('error')
         const product = await productModel.findById(req.params.id)
@@ -79,25 +77,20 @@ const editProduct = async (req: Request, res: Response) => {
         res.render('./admin/products/editProduct', { product, categories, errors })
     }
     catch (err) {
-        res.status(500).send("Ineternal server error")
+        next(err)
     }
 }
 
 //Update the date of the product in the database
-const postEditProduct = async (req: Request, res: Response) => {
+const postEditProduct = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        const errorsArr: string[] = errors.array().map(err => err.msg);
-        req.flash('error', errorsArr)
-        res.redirect(`/admin/products/edit-product/${req.params.id}`)
-    } else {
-        try {
-
+    try {
+        if (!errors.isEmpty()) {
+            const errorsArr: string[] = errors.array().map(err => err.msg);
+            throw new CustomError(errorsArr, 400)
+        } else {
             const { title, desc, category, price } = req.body
-
             let newData: ProductArgs = { title, desc, category, price: Number(price) }
-
-
 
             if (req.file?.filename) {
                 try {
@@ -116,16 +109,15 @@ const postEditProduct = async (req: Request, res: Response) => {
             req.flash('success', 'Product has been updated successfully')
             res.redirect('/admin/products/allProducts')
         }
-        catch (err) {
-            // console.log(err)
-            res.status(500).send("Internal server error")
-        }
     }
-
+    catch (err) {
+        next(err);
+    }
 }
 
+
 //Delete product
-const deleteProduct = async (req: Request, res: Response) => {
+const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const product = await productModel.findById(req.params.id)
         if (product?.image) {
@@ -139,7 +131,7 @@ const deleteProduct = async (req: Request, res: Response) => {
         res.redirect('/admin/products/allProducts')
     }
     catch (err) {
-        res.status(500).send('Internal server error')
+        next(err);
     }
 
 

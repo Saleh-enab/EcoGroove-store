@@ -23,7 +23,15 @@ router.post('/add-page', [
 
 router.get('/edit-page/:id', controller.editPage)
 
-router.post('/edit-page/:id', controller.postEditPage)
+router.post('/edit-page/:id', [
+    check("title")
+        .notEmpty()
+        .withMessage("Title must have a value"),
+
+    check("content")
+        .notEmpty()
+        .withMessage("Content must have a value")
+], controller.postEditPage)
 
 router.delete('/delete-page/:id', controller.deletePage)
 

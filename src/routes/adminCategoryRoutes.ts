@@ -18,7 +18,11 @@ router.post('/add-category', [
 
 router.get('/edit-category/:id', controller.editCateory)
 
-router.post('/edit-category/:id', controller.postEditCategory)
+router.post('/edit-category/:id', [
+    check("title")
+        .notEmpty()
+        .withMessage("Title must have a value"),
+], controller.postEditCategory)
 
 router.delete('/delete-category/:id', controller.deleteCategory)
 
