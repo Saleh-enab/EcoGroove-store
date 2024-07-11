@@ -1,28 +1,29 @@
-<%- include('../partials/adminHeader') %>
+<%- include('../../partials/adminheader') %>
 
-    <h2 class="page-title">Add a page</h2>
-    <a href="/admin/pages" class="btn btn-primary">Back to all pages</a>
+    <h2 class="page-title">Edit a page</h2>
+    <a href="/admin/pages/allPages" class="btn btn-primary">Back to all pages</a>
     <br><br>
 
-    <form method="post" action="/admin/pages/add-page">
+    <form method="post" action="/admin/pages/edit-page/<%= id %>">
 
         <div class="form-group">
-            <label for="">Title</label>
+            <label for="title">Title</label>
             <input type="text" class="form-control" name="title" value="<%= title %>" placeholder="Title">
         </div>
 
         <div class="form-group">
-            <label for="">Slug</label>
+            <label for="slug">Slug</label>
             <input type="text" class="form-control" name="slug" value="<%= slug %>" placeholder="Slug">
         </div>
 
         <div class="form-group">
-            <label for="">Content</label>
+            <label for="content">Content</label>
             <textarea name="content" class="form-control" id="ta" cols="30" rows="10"
                 placeholder="Content"><%= content %></textarea>
         </div>
+        <br>
 
         <button class="btn btn-primary">Submit</button>
     </form>
 
-    <%- include('../partials/adminFooter') %>
+    <%- include('../../partials/adminfooter') %>

@@ -2,12 +2,14 @@ import express from 'express'
 import * as path from 'path'
 import morgan from 'morgan'
 import * as config from './config'
-import product from './models/appModel'
 import mongoose from 'mongoose'
 import userRouter from './routes/userRoutes'
-import adminRouter from './routes/adminRoutes'
+import pagesRouter from './routes/adminPagesRoutes'
+import categoryRouter from './routes/adminCategoryRoutes'
+import productsRouter from './routes/adminProductRouter'
 import session from 'express-session'
 import flash from 'connect-flash'
+import methodOverride from 'method-override'
 
 const app = express();
 
@@ -17,18 +19,27 @@ app.set('layout', './layouts/main')
 
 
 //Setting up the middlewares
-app.use(express.static(path.join(__dirname, '../public')))
-app.use(morgan('tiny'))
-app.use('/users', userRouter)
-app.use('/admin', adminRouter)
 app.use(session({
-    secret: 'keyboard cat',
+    secret: 'yourSecretKey',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
-}))
+    cookie: { maxAge: 6000 }
+}));
 
-app.use(flash)
+app.use(flash());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../public')));
+app.use(morgan('tiny'));
+app.use(methodOverride('_method'))
+
+// Routes
+app.use('/users', userRouter);
+app.use('/admin/pages', pagesRouter);
+app.use('/admin/categories', categoryRouter);
+app.use('/admin/products', productsRouter);
+
+
 
 const port = config.port
 const dbURI = config.dbURI

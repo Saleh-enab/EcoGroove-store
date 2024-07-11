@@ -1,0 +1,77 @@
+<%- include('../../partials/adminHeader') %>
+
+    <h2 class="page-title">Categories</h2>
+    <a href="/admin/categories/add-category" class="btn btn-primary">Add a new Category</a>
+    <br><br>
+
+    <% if (messages && messages.length !=0) { %>
+        <% messages.forEach((msg)=> { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: top 20px;">
+                <%= msg %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                    </button>
+            </div>
+            <% }) %>
+                <% } %>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="home">
+                                <th>Title</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% allcategories.forEach(function(category){ %>
+                                <tr id="id_<%= category._id %>" class="<%= category.slug %>">
+                                    <td>
+                                        <%= category.title %>
+                                    </td>
+                                    <td><a href="/admin/categories/edit-category/<%= category._id %>">Edit</a></td>
+                                    <td>
+                                    <td>
+                                        <% if (category.slug !=="home" ) { %>
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal_<%= category._id %>">Delete</button>
+                                            <% } %>
+                                    </td>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                        <% allcategories.forEach(function(category){ %>
+                            <div class="modal fade" id="deleteModal_<%= category._id %>" tabindex="-1" role="dialog"
+                                aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete the category <b class="fw-bold">
+                                                    <%= category.title %>
+                                                </b>?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                            <form
+                                                action="/admin/categories/delete-category/<%= category._id %>?_method=DELETE"
+                                                method="POST">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }); %>
+                    </table>
+
+
+                    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+
+
+                    <%- include('../../partials/adminFooter') %>

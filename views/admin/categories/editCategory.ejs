@@ -1,0 +1,35 @@
+<%- include('../../partials/adminHeader') %>
+
+    <h2 class="page-title">Add a category</h2>
+    <a href="/admin/categories/allCategories" class="btn btn-primary">Back to all categories</a>
+    <br><br>
+
+    <% if (locals.errors) { %>
+        <% locals.errors.forEach((error)=> { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+                <%= error.msg %>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <% }) %>
+                <% } %>
+
+                    <form method="post" action="/admin/categories/edit-category/<%= id %>">
+
+                        <div class="form-group">
+                            <label for="">Title</label>
+                            <input type="text" class="form-control" name="title" value="<%= title %>"
+                                placeholder="Title">
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="slug">Slug</label>
+                            <input class="form-control" type="text" value="<%= slug %>"
+                                placeholder="Readonly input here…" readonly>
+                        </div>
+                        <br>
+                        <button class="btn btn-primary">Submit</button>
+                    </form>
+
+                    <%- include('../../partials/adminFooter') %>

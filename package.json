@@ -12,14 +12,18 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "ckeditor5": "^42.0.0",
+    "ckeditor5-premium-features": "^42.0.0",
     "connect-flash": "^0.1.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "express-validator": "^7.1.0",
+    "method-override": "^3.0.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.5",
+    "multer": "^1.4.5-lts.1",
     "typescript": "^5.5.3"
   },
   "devDependencies": {
@@ -27,7 +31,9 @@
     "@types/express": "^4.17.21",
     "@types/express-ejs-layouts": "^2.5.4",
     "@types/express-session": "^1.18.0",
+    "@types/method-override": "^0.0.35",
     "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.11",
     "@types/node": "^20.14.10",
     "concurrently": "^8.2.2",
     "morgan": "^1.10.0",
