@@ -52,12 +52,13 @@
                                                             <img id="noimage" src="\images\noimage.png" height="50px"
                                                                 width="50px">
                                                             <% } else {%>
-                                                                <img id="noimage" src="\images\<%= product.image %>"
+                                                                <img id="noimage"
+                                                                    src="\images\<%= product.id %>\<%= product.image %>"
                                                                     height="50px" width="50px">
                                                                 <% }%>
                                                     </td>
                                                     <td><a
-                                                            href="/admin/products/edit-product/<%= product._id %>">Edit</a>
+                                                            href="/admin/products/edit-product/<%= product.id %>">Edit</a>
                                                     </td>
                                                     <td><button type="button" class="btn btn-danger"
                                                             data-bs-toggle="modal"

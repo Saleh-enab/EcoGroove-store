@@ -23,7 +23,7 @@
                         <% }) %>
                             <%}%>
 
-                                <table class="table table-striped sorting">
+                                <table class="table table-striped">
                                     <thead>
                                         <tr class="home">
                                             <th>Title</th>
@@ -38,7 +38,6 @@
                                                     <%= page.title %>
                                                 </td>
                                                 <td><a href="/admin/pages/edit-page/<%= page._id %>">Edit</a></td>
-                                                <td>
                                                 <td>
                                                     <% if (page.slug !=="home" ) { %>
                                                         <button type="button" class="btn btn-danger"
@@ -82,8 +81,8 @@
                                 </table>
 
 
-                                <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-                                <script>
+                                <!-- <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script> -->
+                                <!-- script>
 
                                     $('tbody').sortable({
 
@@ -98,7 +97,7 @@
 
                                     });
 
-                                </script>
+                                </script> -->
 
 
                                 <%- include('../../partials/adminFooter') %>

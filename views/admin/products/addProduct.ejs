@@ -63,10 +63,9 @@
                                     <button class="btn btn-primary">Submit</button>
                                 </form>
 
-
-                                <!-- image preview -->
+                                <br><br>
                                 <script>
-
+                                    // Preview image
                                     function readURL(input) {
                                         if (input.files && input.files[0]) {
                                             var reader = new FileReader();
@@ -82,7 +81,7 @@
                                     $("#img").change(function () {
                                         readURL(this);
                                     });
-
                                 </script>
 
-                                <%- include('../../partials/adminfooter') %>
+
+                                <%- include('../../partials/adminFooter') %>

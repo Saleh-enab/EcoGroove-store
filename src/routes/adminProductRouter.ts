@@ -1,8 +1,8 @@
 import * as controller from '../controllers/adminProductsController';
-import express ,{Request,Response,NextFunction}from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import { check } from 'express-validator'
 import categoryModel from '../models/categoryModel'
-import { uploadMiddleware } from '../config';
+import { uploadMiddleware, uploadGalleryMiddleware, createImagesFolders } from '../config';
 
 const router = express.Router()
 
@@ -17,7 +17,7 @@ router.get('/allProducts', controller.showAllProducts)
 
 router.get('/add-product', controller.addProduct)
 
-router.post('/add-product', uploadMiddleware, [
+router.post('/add-product', createImagesFolders, uploadMiddleware, [
     check("title")
         .notEmpty()
         .escape()
@@ -34,6 +34,8 @@ router.post('/add-product', uploadMiddleware, [
         .isNumeric()
         .withMessage("Price is invalid number"),
 ], controller.postNewProduct)
+
+router.post('/product-gallery/:id', uploadGalleryMiddleware, controller.uploadGallery)
 
 
 router.get('/edit-product/:id', controller.editProduct)
@@ -56,31 +58,8 @@ router.post('/edit-product/:id', uploadMiddleware, [
         .withMessage("Price is invalid number"),
 ], controller.postEditProduct)
 
+router.get('/delete-image/:image', controller.deleteGalleryImage)
+
 router.delete('/delete-product/:id', controller.deleteProduct)
 
 export = router
-
-
-
-// router.post('/add-product', (req: Request, res: Response, next: NextFunction) => {
-    
-// }, [
-//     check("title")
-//         .notEmpty()
-//         .escape()
-//         .withMessage("Title must have a value"),
-//     check("desc")
-//         .notEmpty()
-//         .escape()
-//         .withMessage("Description must have a value"),
-//     check("category")
-//         .custom(categoryExists)
-//         .escape()
-//         .withMessage("Category chosen is invalid"),
-//     check("price")
-//         .isNumeric()
-//         .withMessage("Price is invalid number"),
-// ], controller.postNewProduct);
-
-
-

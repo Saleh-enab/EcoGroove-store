@@ -61,8 +61,9 @@
                                             <% if (!product.image) { %>
                                                 <img id="noimage" src="\images\noimage.png" height="50px" width="50px">
                                                 <% } else {%>
-                                                    <img id="noimage" src="\images\<%= product.image %>" height="50px"
-                                                        width="50px">
+                                                    <img id="noimage"
+                                                        src="\images\<%= product.id %>\<%= product.image %>"
+                                                        height="50px" width="50px">
                                                     <% }%>
                                         </p>
                                     </div>
@@ -78,62 +79,91 @@
                                     <button class="btn btn-primary">Submit</button>
                                 </form>
 
-                                <!-- <hr>
-<h3 class="page-header">Gallery</h3>
+                                <!-- image preview -->
+                                <script>
 
-<ul class="gallery">
-    <%# galleryImages.forEach(function(image){ %>
-    <%# if (image != "thumbs") { %>
-    <li>
-        <img src="/product_images/<%#= id %>/gallery/thumbs/<%#= image %>" alt="">&nbsp;
-        <a class="confirmDeletion" href="/admin/products/delete-image/<%#= image %>?id=<%#= id %>">delete</a>
-    </li>
-    <%# } %>
-    <%# }); %>
-</ul>
+                                    // Preview image
+                                    function readURL(input) {
+                                        if (input.files && input.files[0]) {
+                                            var reader = new FileReader();
 
-<br><br>
-<form action="/admin/products/product-gallery/<%#= id %>" method="post" enctype="multipart/form-data" class="dropzone" id="dropzoneForm">
-    <div class="fallback">
-        <input type="file" name="file" multiple>
-        <input type="submit" value="Upload">
-    </div>
-</form>
+                                            reader.onload = function (e) {
+                                                $("#imgPreview").attr('src', e.target.result).width(100).height(100);
+                                            }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/basic.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/dropzone.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/dropzone.js"></script>
-<script>
-    
-    // Preview image
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function(e) {
-                $("#imgPreview").attr('src', e.target.result).width(100).height(100);
-            }
-            
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-    $("#img").change(function() {
-        readURL(this);
-    });
-    
-    // Dropzone
-    Dropzone.options.dropzoneForm = {
-        acceptedFiles: "image/*",
-        init: function() {
-            this.on("queuecomplete", function(file) {
-               setTimeout(function() {
-                location.reload()
-                }, 1000); 
-            });
-        }
-    }
-    
-</script> -->
+                                            reader.readAsDataURL(input.files[0]);
+                                        }
+                                    }
+
+                                    $("#img").change(function () {
+                                        readURL(this);
+                                    });
+
+                                </script>
+
+                                <hr>
+                                <h3 class="page-header">Gallery</h3>
+
+                                <ul class="gallery">
+                                    <% if (galleryImages.length!=0) { %>
+                                        <% galleryImages.forEach(function(image){ %>
+                                            <li>
+                                                <img src="/images/<%= product.id %>/gallery/thumb/<%= image %>"
+                                                    alt="">&nbsp;
+                                                <a class="confirmDeletion"
+                                                    href="/admin/products/delete-image/<%= image %>?id=<%= product.id %>">delete</a>
+                                            </li>
+                                            <% }); %>
+                                                <% } %>
+
+                                </ul>
+
+                                <br><br>
+                                <form action="/admin/products/product-gallery/<%= product.id %>" method="post"
+                                    enctype="multipart/form-data" class="dropzone" id="dropzoneForm">
+                                    <div class="fallback">
+                                        <input type="file" name="file" multiple>
+                                        <input type="submit" value="Upload">
+                                    </div>
+                                </form>
+
+                                <link rel="stylesheet"
+                                    href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/basic.css" />
+                                <link rel="stylesheet"
+                                    href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/dropzone.css" />
+                                <script
+                                    src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/dropzone.js"></script>
+                                <script>
+
+                                    // Preview image
+                                    function readURL(input) {
+                                        if (input.files && input.files[0]) {
+                                            var reader = new FileReader();
+
+                                            reader.onload = function (e) {
+                                                $("#imgPreview").attr('src', e.target.result).width(100).height(100);
+                                            }
+
+                                            reader.readAsDataURL(input.files[0]);
+                                        }
+                                    }
+
+                                    $("#img").change(function () {
+                                        readURL(this);
+                                    });
+
+                                    // Dropzone
+                                    Dropzone.options.dropzoneForm = {
+                                        acceptedFiles: "image/*",
+                                        init: function () {
+                                            this.on("queuecomplete", function (file) {
+                                                setTimeout(function () {
+                                                    location.reload()
+                                                }, 1000);
+                                            });
+                                        }
+                                    }
+
+                                </script>
 
                                 <%- include('../../partials/adminFooter') %>

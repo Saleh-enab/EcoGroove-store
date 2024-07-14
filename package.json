@@ -24,6 +24,7 @@
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.5",
     "multer": "^1.4.5-lts.1",
+    "resize-img": "^2.0.0",
     "typescript": "^5.5.3"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.11",
     "@types/node": "^20.14.10",
+    "@types/resize-img": "^2.0.3",
     "concurrently": "^8.2.2",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.4",

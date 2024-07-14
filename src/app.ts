@@ -3,7 +3,8 @@ import * as path from 'path'
 import morgan from 'morgan'
 import * as config from './config'
 import mongoose from 'mongoose'
-import userRouter from './routes/userRoutes'
+import userPagesRouter from './routes/userPagesRouter'
+import userProductsRouter from './routes/userProductsRoutes'
 import pagesRouter from './routes/adminPagesRoutes'
 import categoryRouter from './routes/adminCategoryRoutes'
 import productsRouter from './routes/adminProductRouter'
@@ -46,7 +47,8 @@ app.use(methodOverride('_method'))
 
 
 // Routes
-app.use('/users', userRouter);
+app.use('/products', userProductsRouter)
+app.use('/pages', userPagesRouter);
 app.use('/admin/pages', pagesRouter);
 app.use('/admin/categories', categoryRouter);
 app.use('/admin/products', productsRouter);

@@ -15,12 +15,16 @@ class CustomError extends Error {
 
 
 const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
+    console.log(err.messages || err.message)
     if (err.status === 400 && Array.isArray(err.messages)) {
         req.flash('error', err.messages);
         res.redirect('back');
     } else {
         err.status = err.status || 500;
-        err.message = String(err.messages) || 'Internal Server Error';
+        if (!err.message) {
+            err.message = String(err.messages) || 'Internal Server Error';
+        }
+
         req.flash('error', err.message);
         res.redirect('back');
     }
