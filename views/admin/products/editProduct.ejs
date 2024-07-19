@@ -42,10 +42,17 @@
                                         <label for="">Category</label>
                                         <select name="category" class="form-control" id="dropdownMenuButton">
                                             <% categories.forEach((cat)=> { %>
-                                                <option value="<%= cat.slug %>">
-                                                    <%= cat.title %>
-                                                </option>
-                                                <% }); %>
+                                                <% if (cat.slug==product.category) { %>
+                                                    <option value="<%= cat.slug %>" selected>
+                                                        <%= cat.title %>
+                                                    </option>
+                                                    <% } else { %>
+                                                        <option value="<%= cat.slug %>">
+                                                            <%= cat.title %>
+                                                        </option>
+                                                        <% } %>
+
+                                                            <% }); %>
                                         </select>
                                     </div>
 

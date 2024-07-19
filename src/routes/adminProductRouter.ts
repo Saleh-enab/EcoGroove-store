@@ -2,7 +2,7 @@ import * as controller from '../controllers/adminProductsController';
 import express, { Request, Response, NextFunction } from 'express'
 import { check } from 'express-validator'
 import categoryModel from '../models/categoryModel'
-import { uploadMiddleware, uploadGalleryMiddleware, createImagesFolders } from '../config';
+import { uploadMiddleware, uploadGalleryMiddleware, createImagesFolders, isAdmin } from '../config';
 
 const router = express.Router()
 
@@ -13,11 +13,11 @@ const categoryExists = async (value: string) => {
 }
 
 
-router.get('/allProducts', controller.showAllProducts)
+router.get('/allProducts', isAdmin, controller.showAllProducts)
 
-router.get('/add-product', controller.addProduct)
+router.get('/add-product', isAdmin, controller.addProduct)
 
-router.post('/add-product', createImagesFolders, uploadMiddleware, [
+router.post('/add-product', isAdmin, createImagesFolders, uploadMiddleware, [
     check("title")
         .notEmpty()
         .escape()
@@ -35,12 +35,12 @@ router.post('/add-product', createImagesFolders, uploadMiddleware, [
         .withMessage("Price is invalid number"),
 ], controller.postNewProduct)
 
-router.post('/product-gallery/:id', uploadGalleryMiddleware, controller.uploadGallery)
+router.post('/product-gallery/:id', isAdmin, uploadGalleryMiddleware, controller.uploadGallery)
 
 
-router.get('/edit-product/:id', controller.editProduct)
+router.get('/edit-product/:id', isAdmin, controller.editProduct)
 
-router.post('/edit-product/:id', uploadMiddleware, [
+router.post('/edit-product/:id', isAdmin, uploadMiddleware, [
     check("title")
         .notEmpty()
         .escape()
@@ -58,8 +58,8 @@ router.post('/edit-product/:id', uploadMiddleware, [
         .withMessage("Price is invalid number"),
 ], controller.postEditProduct)
 
-router.get('/delete-image/:image', controller.deleteGalleryImage)
+router.get('/delete-image/:image', isAdmin, controller.deleteGalleryImage)
 
-router.delete('/delete-product/:id', controller.deleteProduct)
+router.delete('/delete-product/:id', isAdmin, controller.deleteProduct)
 
 export = router

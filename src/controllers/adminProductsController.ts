@@ -64,7 +64,6 @@ const postNewProduct = async (req: CustomRequest, res: Response, next: NextFunct
 
             await product.save()
 
-            // req.productId = product.id
             req.flash('success', "Product has been added successfully")
             res.redirect('/admin/products/allProducts')
         }
@@ -73,7 +72,6 @@ const postNewProduct = async (req: CustomRequest, res: Response, next: NextFunct
     catch (err) {
         next(err);
     }
-
 }
 
 
@@ -194,16 +192,7 @@ const deleteProduct = async (req: Request, res: Response, next: NextFunction) =>
     try {
         const product = await productModel.findById(req.params.id)
         const productPath = path.join(__dirname, '../../public/images', product?.id)
-        if (product?.image) {
-            fs.unlink(path.join(__dirname, `../../public/images/${product?.image}`), (err) => {
-                if (err) {
-                    return next(new CustomError(err.message, 500))
-                }
-            })
-
-            await rmdir(productPath)
-        }
-
+        await rmdir(productPath)
         await productModel.findByIdAndDelete(req.params.id)
         req.flash('success', "Product has been deleted successfully")
         res.redirect('/admin/products/allProducts')

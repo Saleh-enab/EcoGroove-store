@@ -3,9 +3,6 @@ import { validationResult } from "express-validator";
 import pageModel from "../models/pageModel";
 import { CustomError } from "../errorHandler";
 
-const getHome = (req: Request, res: Response) => {
-    res.send("Hello From Admin page")
-}
 
 
 //Showing all pages in a the DataBase
@@ -52,7 +49,7 @@ const postNewPage = async (req: Request, res: Response, next: NextFunction) => {
 
             await page.save()
             req.flash('success', 'page added successfully')
-            res.redirect('/admin/pages/allPages')
+            res.redirect('/admin/pages')
         }
     } catch (err) {
         next(err);
@@ -96,7 +93,7 @@ const postEditPage = async (req: Request, res: Response, next: NextFunction) => 
             }
             await pageModel.findByIdAndUpdate(req.params.id, newData)
             req.flash('success', 'Page has been updated successfully')
-            res.redirect('/admin/pages/allPages')
+            res.redirect('/admin/pages')
         }
 
 
@@ -110,7 +107,7 @@ const deletePage = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await pageModel.findByIdAndDelete(req.params.id)
         req.flash('success', 'Page has been deleted successfully')
-        res.redirect('/admin/pages/allPages')
+        res.redirect('/admin/pages')
     }
     catch (err) {
         next(err);
@@ -119,4 +116,4 @@ const deletePage = async (req: Request, res: Response, next: NextFunction) => {
 
 
 
-export { getHome, addPage, postNewPage, showAllPages, editPage, postEditPage, deletePage }
+export { addPage, postNewPage, showAllPages, editPage, postEditPage, deletePage }

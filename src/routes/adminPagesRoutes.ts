@@ -2,15 +2,15 @@ import * as controller from '../controllers/adminPagesControllers'
 import express from 'express'
 import { check } from 'express-validator';
 const router = express.Router();
-
-router.get('/', controller.getHome)
-
-router.get('/allPages', controller.showAllPages)
-
-router.get('/add-page', controller.addPage)
+import { isAdmin } from '../config';
 
 
-router.post('/add-page', [
+router.get('/', isAdmin, controller.showAllPages)
+
+router.get('/add-page', isAdmin, controller.addPage)
+
+
+router.post('/add-page', isAdmin, [
     check("title")
         .notEmpty()
         .withMessage("Title must have a value"),
@@ -21,9 +21,9 @@ router.post('/add-page', [
 ], controller.postNewPage)
 
 
-router.get('/edit-page/:id', controller.editPage)
+router.get('/edit-page/:id', isAdmin, controller.editPage)
 
-router.post('/edit-page/:id', [
+router.post('/edit-page/:id', isAdmin, [
     check("title")
         .notEmpty()
         .withMessage("Title must have a value"),
@@ -33,7 +33,7 @@ router.post('/edit-page/:id', [
         .withMessage("Content must have a value")
 ], controller.postEditPage)
 
-router.delete('/delete-page/:id', controller.deletePage)
+router.delete('/delete-page/:id', isAdmin, controller.deletePage)
 
 
 export = router

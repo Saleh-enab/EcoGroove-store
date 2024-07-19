@@ -17,15 +17,15 @@
 </head>
 
 <body>
-    <!-- <div class="ajaxbg">
+    <div class="ajaxbg">
         <div class="ajaxinner">
             <h3>You are now being redirected to paypal...</h3>
             <img src="/images/ajax-loader.gif" alt="ajax-loader" />
         </div>
-    </div> -->
+    </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">EcoGroove Store</a>
+            <a class="navbar-brand" href="/pages">EcoGroove Store</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
                 aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -54,19 +54,22 @@
                                 <%= cart.length %>
                                     <% } else { %> 0 <% } %>)</a>
                     </li>
-                    <!-- <%# if (user) { %>
-                    <li class="nav-item"><a class="nav-link" href="/users/logout">Hi, <%#= user.username %> ( logout )</a></li>
-                    <%# } else { %>
-                    <li class="nav-item"><a class="nav-link" href="/users/register">Register</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/users/login">Log in</a></li>
-                    <%# } %>
-                    <%# if (user && user.admin == 1) { %>
-                    <li class="nav-item"><a class="nav-link" href="/admin/pages">Admin Area</a></li>
-                    <%# }%> -->
+                    <% if (user) { %>
+                        <li class="nav-item"><a class="nav-link" href="/users/logout">Hi, <%= user.username %> ( logout
+                                    )</a></li>
+                        <% } else { %>
+                            <li class="nav-item"><a class="nav-link" href="/users/register">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/users/login">Login</a></li>
+                            <% } %>
+                                <% if (user && user.admin==true) { %>
+                                    <li class="nav-item"><a class="nav-link" href="/admin/pages">Admin Area</a>
+                                    </li>
+                                    <% }%>
                 </ul>
             </div>
         </div>
     </nav>
+    <br>
 
     <div class="container">
 
@@ -90,17 +93,20 @@
                                 <%}%>
 
                                     <div class="row">
-                                        <div class="col-xs-12 col-md-3">
-                                            <h3>Categories</h3>
-                                            <ul class="list-group">
-                                                <li class="list-group-item"><a href="/products">All products</a>
-                                                </li>
-                                                <% categories.forEach((cat)=>{ %>
-                                                    <li class="list-group-item"><a href="/products/<%= cat.slug %>">
-                                                            <%= cat.title %>
-                                                        </a></li>
-                                                    <% }); %>
-                                            </ul>
-                                        </div>
-                                        <div class="col-xs-12 col-md-1"></div>
-                                        <div class="col-xs-12 col-md-8">
+                                        <% if (user) { %>
+                                            <div class="col-xs-12 col-md-3">
+                                                <h3>Categories</h3>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item"><a href="/products">All products</a>
+                                                    </li>
+                                                    <% categories.forEach((cat)=>{ %>
+                                                        <li class="list-group-item"><a href="/products/<%= cat.slug %>">
+                                                                <%= cat.title %>
+                                                            </a></li>
+                                                        <% }); %>
+                                                </ul>
+                                            </div>
+                                            <% } %>
+
+                                                <div class="col-xs-12 col-md-1"></div>
+                                                <div class="col-xs-12 col-md-8">

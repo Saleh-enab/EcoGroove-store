@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import pageModel from "../models/pageModel";
 import categoryModel from "../models/categoryModel";
-import { CustomError } from "../errorHandler";
 import productModel from "../models/productModel";
+import { readDir } from "../config";
 
 
 
@@ -35,4 +35,24 @@ const getCategoryProducts = async (req: Request, res: Response, next: NextFuncti
     }
 }
 
-export { getAllProducts, getCategoryProducts }
+
+//Get product details
+const getProductPage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const product = await productModel.findById(req.params.id)
+        const pages = await pageModel.find({})
+        const categories = await categoryModel.find({})
+        const galleryPath = `public/images/${product?.id}/gallery/thumb`
+        const galleryImages = await readDir(galleryPath)
+        const title = product?.title
+
+        res.render('./user/productPage', { title, pages, categories, p: product, galleryImages })
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+
+
+export { getAllProducts, getCategoryProducts, getProductPage }

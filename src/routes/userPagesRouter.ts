@@ -1,10 +1,11 @@
 import * as controller from '../controllers/uersPagesController'
 import express from 'express'
 const router = express.Router();
+import { isAuth } from '../config';
 
-router.get('/', controller.getHome)
+router.get('/', isAuth, controller.getHome)
 
-router.get('/:slug', controller.getPage)
+router.get('/:slug', isAuth, controller.getPage)
 
 
 export = router

@@ -39,6 +39,7 @@
                                     <div class="form-group">
                                         <label for="category">Category</label>
                                         <select name="category" class="form-control" id="dropdownMenuButton">
+                                            <option value="" selected disabled hidden>-- Choose --</option>
                                             <% categories.forEach((cat)=> { %>
                                                 <option value="<%= cat.slug %>">
                                                     <%= cat.title %>

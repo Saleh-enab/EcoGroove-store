@@ -5,7 +5,6 @@ import path from 'path'
 import fs from 'fs'
 import { CustomError } from './errorHandler'
 import mongoose from 'mongoose';
-import { promises } from 'dns';
 type CustomRequest = Request & { productId?: string }
 dotenv.config();
 
@@ -131,8 +130,6 @@ const fileFilter: multer.Options['fileFilter'] = (req, file, cb) => {
 };
 
 const upload = multer({ storage, fileFilter })
-const uploadGallery = multer({ storage: galleryStorage, fileFilter })
-
 
 const uploadMiddleware = (req: Request, res: Response, next: express.NextFunction) => {
     const uploadSingle = upload.single('image');
@@ -162,4 +159,22 @@ const uploadGalleryMiddleware = (req: Request, res: Response, next: express.Next
     });
 };
 
-export { port, dbURI, uploadMiddleware, uploadGalleryMiddleware, mkdir, rmdir, createImagesFolders, moveFiles, readFile, writeFile, readDir }
+const isAuth = (req: Request, res: Response, next: NextFunction) => {
+    if (req.session.user) {
+        next();
+    } else {
+        req.flash('error', "User must be logged-in");
+        res.redirect('/users/login');
+    }
+}
+
+const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+    if (req.session.user && req.session.user.admin) {
+        next();
+    } else {
+        req.flash('error', "Only admins can access this page");
+        res.redirect('/products');
+    }
+}
+
+export { port, dbURI, uploadMiddleware, uploadGalleryMiddleware, mkdir, rmdir, createImagesFolders, moveFiles, readFile, writeFile, readDir, isAuth, isAdmin }
