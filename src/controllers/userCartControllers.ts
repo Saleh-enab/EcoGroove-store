@@ -93,7 +93,7 @@ const updateCart = async (req: Request, res: Response, next: NextFunction) => {
         const id = req.params.id
         const action = req.query.action
         for (let i = 0; i < cart?.length; i++) {
-            if (cart[i].id === id)
+            if (cart[i].id === id) {
                 switch (action) {
                     case "add":
                         cart[i].quantity++;
@@ -113,7 +113,8 @@ const updateCart = async (req: Request, res: Response, next: NextFunction) => {
                     default:
                         return (new CustomError("Error while updating the cart", 500))
                 }
-            break;
+                break;
+            }
         }
 
         req.flash("success", "Cart updated successfully");
