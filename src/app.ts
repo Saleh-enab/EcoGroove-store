@@ -73,8 +73,10 @@ app.use('/admin/pages', pagesRouter);
 app.use('/admin/categories', categoryRouter);
 app.use('/admin/products', productsRouter);
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-    req.flash('error', "Invalid URL");
-    res.redirect('/products')
+    if (!(req.url == '/favicon.ico')) {
+        req.flash('error', "Invalid URL");
+        res.redirect('/products')
+    }
 })
 
 // Error Middleware
